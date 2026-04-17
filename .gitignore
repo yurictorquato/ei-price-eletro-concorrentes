@@ -1,0 +1,28 @@
+# Ambiente Virtual (Crucial ignorar)
+.venv/
+env/
+venv/
+ENV/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pastas de Dados
+# Ignoramos o conteúdo, mas o .gitkeep que você criou garante que a pasta exista no GitHub
+data/input/*
+!data/input/.gitkeep
+
+data/output/**/*
+!data/output/**/.gitkeep
+
+# Arquivos específicos de dados e logs
+*.csv
+*.xlsx
+*.xls
+*.txt
+*.log
+
+# Configurações do VS Code
+.vscode/
