@@ -9,13 +9,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Pastas de Dados
-# Ignoramos o conteúdo, mas o .gitkeep que você criou garante que a pasta exista no GitHub
-data/input/*
-!data/input/.gitkeep
+# Ignora tudo dentro da pasta data
+data/**
 
-data/output/**/*
-!data/output/**/.gitkeep
+# Mas não ignore as pastas em si (permite que o Git entre nelas)
+!**/
+
+# Não ignore nenhum arquivo .gitkeep, não importa onde ele esteja
+!**/.gitkeep
 
 # Arquivos específicos de dados e logs
 *.csv
