@@ -7,7 +7,7 @@ import pandas as pd
 CAMINHO: Path = Path(r"../../data/input/eiprice_sem_frete")
 
 
-def carregar_arquivos() -> list[pd.DataFrame]:
+def carregar_arquivos_eiprice_sem_frete() -> list[pd.DataFrame]:
     dataframes: list[pd.DataFrame] = []
 
     for arquivo in CAMINHO.glob(pattern="*.xlsx"):
@@ -18,7 +18,7 @@ def carregar_arquivos() -> list[pd.DataFrame]:
     return dataframes
 
 
-dataframes: list[pd.DataFrame] = carregar_arquivos()
+dataframes: list[pd.DataFrame] = carregar_arquivos_eiprice_sem_frete()
 
 df_sem_frete: pd.DataFrame = pd.concat(objs=dataframes, ignore_index=True)
 
