@@ -86,6 +86,13 @@ COLUNAS_NUMERICAS: list[str] = [
     "custo_loja",
 ]
 
+COLUNAS_NUMERICAS_INT: list[str] = [
+    "organizacao_vendas",
+    "canal_distribuicao",
+    "generico",
+    "mercadoria",
+    ""
+]
 
 # %%
 
@@ -108,7 +115,9 @@ def carregar_arquivos_zvmargens() -> pd.DataFrame:
             dtype=str,
         )
 
-        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+        # df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+
+        df = df.iloc[:, 1:-1]
 
         df.columns = NOME_COLUNAS
 
@@ -146,4 +155,4 @@ def converter_tipos(df: pd.DataFrame) -> pd.DataFrame:
 
 df_zvmargens: pd.DataFrame = carregar_arquivos_zvmargens()
 
-df_zvmargens.dtypes
+df_zvmargens.head(5)
