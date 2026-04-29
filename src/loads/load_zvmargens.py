@@ -34,7 +34,7 @@ NOME_COLUNAS: list[str] = [
     "margem_teorica",
     "tipo_promo",
     "descricao",
-    "tipo_vigente",
+    "data_tipo_vigente",
     "fim_promo",
     "acao_promo",
     "margem_pesquisa",

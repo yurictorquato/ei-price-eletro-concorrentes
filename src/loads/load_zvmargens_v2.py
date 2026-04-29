@@ -1,9 +1,98 @@
 from pathlib import Path
 
 import pandas as pd
+
 # from IPython.display import display
 
 CAMINHO: Path = Path(r"../../data/input/zvmargens")
+
+# %%
+
+NOME_COLUNAS: list[str] = [
+    "organizacao_vendas",
+    "canal_distribuicao",
+    "regiao",
+    "loja",
+    "generico",
+    "mercadoria",
+    "descricao_mercadoria",
+    "umv",
+    "preco_clube",
+    "preco_vigente",
+    "preco_promo",
+    "preco_pesquisa",
+    "preco_normal",
+    "preco_lista",
+    "tipo_vigente",
+    "inicio_vigente",
+    "fim_vigente",
+    "inicio_clube",
+    "fim_clube",
+    "pmz_medio",
+    "margem_vigente",
+    "margem_normal",
+    "margem_teorica",
+    "tipo_promo",
+    "descricao",
+    "data_tipo_vigente",
+    "fim_promo",
+    "acao_promo",
+    "margem_pesquisa",
+    "margem_promocao",
+    "status_centro",
+    "estoque",
+    "inicio_pesquisa",
+    "fim_pesquisa",
+    "inicio_normal",
+    "inicio_lista",
+    "fim_normal",
+    "ean",
+    "nivel_preco_clube",
+    "nivel_preco_normal",
+    "criado_clube",
+    "criado_vigente",
+    "pmz_gerencial",
+    "custo_loja",
+]
+
+COLUNAS_DATA: list[str] = [
+    "inicio_vigente",
+    "fim_vigente",
+    "inicio_clube",
+    "fim_clube",
+    "inicio_pesquisa",
+    "fim_pesquisa",
+    "inicio_normal",
+    "inicio_lista",
+    "fim_normal",
+    "criado_clube",
+    "criado_vigente",
+]
+
+COLUNAS_NUMERICAS: list[str] = [
+    "preco_clube",
+    "preco_vigente",
+    "preco_promo",
+    "preco_pesquisa",
+    "preco_normal",
+    "preco_lista",
+    "pmz_medio",
+    "margem_vigente",
+    "margem_teorica",
+    "margem_pesquisa",
+    "margem_promocao",
+    "estoque",
+    "pmz_gerencial",
+    "custo_loja",
+]
+
+COLUNAS_NUMERICAS_INT: list[str] = [
+    "organizacao_vendas",
+    "canal_distribuicao",
+    "generico",
+    "mercadoria",
+    ""
+]
 
 # %%
 
@@ -63,6 +152,14 @@ for arquivo in arquivos:
 
     df.columns = df.columns.str.strip()
 
+    df = df.apply(
+        lambda coluna: (
+            coluna.str.strip()
+            if coluna.dtype == "str" or coluna.dtype == "object"
+            else coluna
+        )
+    )
+
     df = df.loc[df["Org.vendas"] == "4000", :]
 
     dataframes.append(df)
@@ -79,20 +176,32 @@ if duplicadas.any():
     for i, is_dup in enumerate(duplicadas):
         if is_dup:
             novos_nomes[i] = "Data Tipo Vigen"
+            COLUNAS_DATAS.append(novos_nomes[i])
 
-df_zvmargens.columns = novos_nomes
+    df_zvmargens.columns = novos_nomes
 
-df = df.apply(lambda coluna: coluna.str.strip() if coluna.dtype == "str" else coluna)
+df_zvmargens[COLUNAS_DATAS] = df_zvmargens[COLUNAS_DATAS].apply(
+    lambda coluna: pd.to_datetime(coluna, format="%d.%m.%Y", errors="coerce")
+)
 
-df[COLUNAS_DATAS] = pd.to_datetime(arg=df[COLUNAS_DATAS], format="%d.%m.%Y")
+df_zvmargens[COLUNAS_FLOAT] = df_zvmargens[COLUNAS_FLOAT].apply(
+    lambda coluna: coluna.str.replace(".", "").str.replace(",", ".")
+)
 
-df[COLUNAS_FLOAT] = df[COLUNAS_FLOAT].astype(float)
-df[COLUNAS_INT] = df[COLUNAS_INT].astype(int)
+df_zvmargens[COLUNAS_FLOAT] = (
+    df_zvmargens[COLUNAS_FLOAT]
+    .apply(lambda coluna: pd.to_numeric(coluna, errors="coerce"))
+    .round(2)
+)
 
-
-print(df_zvmargens.columns[df_zvmargens.columns.duplicated()])
+df_zvmargens[COLUNAS_INT] = (
+    df_zvmargens[COLUNAS_INT]
+    .apply(lambda coluna: pd.to_numeric(coluna, errors="coerce"))
+    .astype("Int64")
+)
 
 # %%
 
-print(df_zvmargens.dtypes)
-print(df_zvmargens.columns.tolist())
+df_zvmargens.to_excel(
+    excel_writer="zvmargens_gerado.xlsx", engine="openpyxl", index=False
+)
