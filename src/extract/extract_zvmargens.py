@@ -110,7 +110,7 @@ for arquivo in arquivos:
     df = df.iloc[:, 1:-1]
 
     df.columns = df.columns.str.strip()
-    
+
     duplicadas = df.columns.duplicated()
 
     if duplicadas.any():
